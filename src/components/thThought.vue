@@ -3,34 +3,57 @@
           ref="multipleTable"
           :data="tableData"
           tooltip-effect="dark"
+          @selection-change="handleSelectionChange"
           style="width: 100%">
+          <!-- 复选按钮 -->
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
+          <!-- 加分项 -->
           <el-table-column
             prop="name"
             label="加分项">
           </el-table-column>
+          <!-- 分数 -->
           <el-table-column
             prop="defaultGrade"
-            label="加分项"
+            label="分数"
             width="200">
               <template slot-scope="scope">
                 <el-input-number  v-model="scope.row.defaultGrade"
                                   :min="scope.row.minGrade"
                                   :max="scope.row.maxGrade"
                                   size="small"></el-input-number>
-                <!-- {{scope.row.defaultGrade}} -->
               </template>
           </el-table-column>
+          <!-- 上传凭证 -->
           <el-table-column
             label="证明"
             width="200">
             <template slot-scope="scope">
-              <el-button type="primary" @click="handleUpdate(scope.$index, scope.row)">
-                上传凭证
-              </el-button>
+              <!-- 图片上传按钮 -->
+              <el-upload  action="http://192.168.137.1:3000/users/postImage"
+                          :limit="1"
+                          :show-file-list="false"
+                          :on-success="uploadSuccess"
+                          v-if="tableData[scope.$index].ischecked">
+                <el-button size="small" round slot="trigger">{{tableData[scope.$index].ischecked}}</el-button>
+              </el-upload>
+              <!-- 图片预览按钮 -->
+              <el-popover placement="left"
+                          title="您确定要删除这张照片吗"
+                          v-else>
+                  <!-- 预览照片 -->
+                  <el-image :src="scope.row.url"
+                            fit="cover"
+                            class="preview--image"></el-image>
+                  <div style="text-align:right;margin-top:8px;">
+                    <el-button size="mini" type="text" @click="previewCancle(scope.$index)" style="margin-right:20px">取消</el-button>
+                    <el-button type="danger" size="mini" @click="visible = false">确定删除</el-button>
+                  </div>
+                  <el-button size="small" type="primary" slot="reference" round>预览照片</el-button>
+                </el-popover>
             </template>
           </el-table-column>
     </el-table>
@@ -42,22 +65,63 @@ export default {
   name: 'navBar',
   // Vuex 数据管理
   store:store,
+  // 组件控制用到的数据
+  data(){
+    return {
+      // 用户填写的数据
+    }
+  },
   // 方法
   methods:{
-    handleUpdate(index,row){
-     window.console.log(index,row);
-    }
+    //预览上传照片时取消操作
+    previewCancle(index){
+      window.console.log(index);
+    },
+    // 多选框列表操作
+    handleSelectionChange() {
+        window.console.log()
+    },
+    //图片上传回调
+    uploadSuccess(res){
+      window.console.log(res.data.imageUrl);
+      this.$store.commit('setImageUrl',res.data)
+    },
   },
   // 计算属性
   computed:{
     tableData(){
-      return this.$store.state.tableData;
-    }
+      return this.$store.getters.pushFlags;
+    },
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.preview--image{
+  height: 300px;
+  width: 400px;
+}
 
+.upload--button{
+  border-radius: 20px;
+  padding: 12px 24px;
+  border: 1px solid #67c23a;
+  color: #67c23a;
+  font-size: 14px;
+}
+
+.upload--button:hover{
+  background-color: #e6eee2
+}
+
+.upload--hidden{
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: 9px;
+  width: 110px;
+  height: 40px;
+  opacity: 0;
+}
 </style>

@@ -9,7 +9,7 @@
       <!-- 在手机环境下隐藏 -->
       <el-col :span="12" class="hidden-sm-and-down el-header--name">
         <span style="margin-right:20px">陈同学，你好</span>
-        <el-button type="primary">登出</el-button>
+        <el-button type="primary" size="small">登出</el-button>
       </el-col>
     </el-header>
     <!-- 侧边栏 -->
@@ -62,6 +62,9 @@
               <i class="el-icon-postcard"></i>
               <span>其他内容</span>
             </template>
+            <el-menu-item-group index="3-1">
+              <el-menu-item index="3-1-1">必填选项</el-menu-item>
+            </el-menu-item-group>
           </el-submenu>
         </el-menu>
       </el-col>
