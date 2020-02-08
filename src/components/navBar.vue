@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import thThought from './thThought.vue';
 import thCivilized from './thCivilized';
 
 export default {
@@ -86,14 +85,13 @@ export default {
   // compenont
   components:{
     // 思想表现
-    thThought,
     thCivilized
   },
   // 指定传入的参数，键值对形式指定类型
   data() {
       return {
         flag:{aside:false},
-        componentName:"thThought"
+        componentName:"thCivilized"
       }
   },
   // 方法
