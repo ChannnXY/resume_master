@@ -6,30 +6,26 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state:{
         tableData:[
-            {itemId:23140,name:'大学一年级被列为入党积极分子',minGrade:10,maxGrade:15,defaultGrade:15},
-            {itemId:12421,name:'大学二年级被列入党员发展计划',minGrade:10,maxGrade:15,defaultGrade:15},
-            {itemId:21245,name:'大学二年级被列入党员发展计划',minGrade:10,maxGrade:15,defaultGrade:15},
-            {itemId:12314,name:'大学二年级被列入党员发展计划',minGrade:10,maxGrade:15,defaultGrade:15},
-            {itemId:12233,name:'大学二年级被列入党员发展计划',minGrade:10,maxGrade:15,defaultGrade:15},]
+            {itemId:23140,name:'大学一年级被列为入党积极分子',minGrade:0,maxGrade:20,grade:20,imageUrl:"https://channnxy.oss-cn-hangzhou.aliyuncs.com/bianlun.png"},
+            {itemId:12421,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:20,grade:15,imageUrl:""},
+            {itemId:21245,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:20,grade:18,imageUrl:"https://channnxy.oss-cn-hangzhou.aliyuncs.com/bianlun.png"},
+            {itemId:12314,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:20,grade:15,imageUrl:""},
+            {itemId:12233,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:20,grade:18,imageUrl:"https://channnxy.oss-cn-hangzhou.aliyuncs.com/bianlun.png"},],
     },
     getters:{
-        pushFlags:(state) =>{
-            let tableData = new Array();
-            state.tableData.map( (item,index)=>{
-                item.url = index % 2 == 0 ? "" : "https://channnxy.oss-cn-hangzhou.aliyuncs.com/bianlun.png"
-                item.ischecked = index % 2 == 0 ? true : false;
-                tableData.push(item);
-            })
-            window.console.log(tableData);
-            return tableData;
-        }
+
     },
     mutations:{
-        setImageUrl:(state,payload)=>{
-            window.console.log(payload);
-            let imageUrl = payload.payload;
-            state.tableData[0].url = imageUrl;
-            state.tableData[0].ischecked = Boolean(state.tableData[0].url);
+        setImageUrl(state,payload){
+            let index = payload.index;
+            let imageUrl = payload.imageUrl;
+            state.tableData[index].imageUrl = imageUrl;
+            window.console.log(state)
+        },
+        deleteImageUrl(state,payload){
+            let index = payload;
+            state.tableData[index].imageUrl = "";
+            state.tableData[index].grade = 15;
         }
     }
 })
