@@ -22,7 +22,8 @@
     "babel-plugin-import": "^1.13.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "webworker-loader": "^0.1.0"
   },
   "eslintConfig": {
     "root": true,

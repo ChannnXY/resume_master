@@ -16,6 +16,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(collapseTransition);
 
+
 new Vue({
   render: h => h(App),
 }).$mount('#app')
