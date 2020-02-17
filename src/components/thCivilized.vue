@@ -6,8 +6,8 @@
       <el-col :span="2">凭证</el-col>
     </el-row>
     <el-row v-if="selectItems.length>0">
-        <transition-group name="table">
-            <el-row  v-for="(userItem,userIndex) in selectItems" :key="userIndex">
+        <transition-group name="table" tag="div">
+            <el-row  v-for="(userItem,userIndex) in selectItems" :key="userItem" class="table-item">
                 <el-col :span="18">
                     <i class="el-icon-remove-outline" style="color:rgb(250,140,140;margin-right:10px;" @click="removeSelectItem(userIndex)"></i>
                     <el-select v-model="userItem.itemId" filterable placeholder="请选择" @change="onSelectChange($event,userIndex)">
@@ -189,10 +189,11 @@ export default {
     font-weight: bold;
     line-height: 40px;
 }
-.table-enter-active .table-leave-active{
-    opacity: 0;
+.table-item {
+    transition: all 1s;
 }
-.table-enter-active .table-enter-active{
-  transition: all .3s ease;
+.table-enter, .table-leave-to {
+    opacity: 0;
+    transform: translateX(-30px);
 }
 </style>

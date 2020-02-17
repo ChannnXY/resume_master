@@ -1,20 +1,36 @@
 <template>
   <div id="app">
-    <navBar></navBar>
+    <component :is="componentName" @changeCom="changeCom"></component>
   </div>
 </template>
 
 <script>
-import navBar from './components/navBar.vue'
+import index from './components/index.vue'
+import login from './components/login.vue'
 
 export default {
   name: 'app',
   components: {
-    navBar
+    index,
+    login
+  },
+  data(){
+    return{
+      componentName:"index"
+    }
+  },
+  methods:{
+    changeCom(name){
+      this.componentName = name;
+      window.console.log(name)
+    }
   }
 }
 </script>
 
 <style>
-
+  #app{
+    height: 100%;
+    width: 100%;
+  }
 </style>

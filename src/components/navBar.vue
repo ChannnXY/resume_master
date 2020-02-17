@@ -6,6 +6,7 @@
         <i class="el-icon-s-order el-header--icon"></i>
         <span>智能综测填写管理系统</span>
       </el-col>
+      
       <!-- 在手机环境下隐藏 -->
       <el-col :span="12" class="hidden-sm-and-down el-header--name">
         <span style="margin-right:20px">陈同学，你好</span>
