@@ -75,7 +75,7 @@ export default {
             margin-bottom: 10px;
         }
 
-        /deep/ .el-input__inner{
+        .el-input__inner{
             color: $primary;
             background: #F7F4FB;
             border: none;

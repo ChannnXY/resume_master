@@ -1,7 +1,7 @@
 <template>
-<div>
+<div class="wrapper">
     <el-row class="title--item">
-      <el-col :span="18">加分项</el-col>
+      <el-col :span="18" style="padding-left:16px">加分项</el-col>
       <el-col :span="4">分数</el-col>
       <el-col :span="2">凭证</el-col>
     </el-row>
@@ -55,13 +55,14 @@
       <el-col :span="24" class="tableData__null">点击添加记录添加第一条数据ᕦ(･ㅂ･)ᕤ</el-col>
     </el-row>
     <el-row>
-      <el-col :span="20">合计:<span style="margin:10px;color:#409EFF">{{partGrade}}</span>分</el-col>
-      <el-col :span="2">
-          <el-button round size="small" @click="addSelectItem">
-              添加记录
-          </el-button>
-      </el-col>
-      <el-col :span="2">
+        <el-col :span="2">
+          <el-button size="small" @click="addSelectItem" icon="el-icon-plus" circle ></el-button>
+          单击添加项目
+        </el-col>
+    </el-row>
+    <el-row class="result-bar">
+      <el-col :span="2">合计:<span style="margin:10px;color:#409EFF">{{partGrade}}</span>分</el-col>
+      <el-col :span="2" :offset="20">
           <el-button type="primary" round size="small" @click="submitSelectItem">
               保存记录
           </el-button>
@@ -94,6 +95,12 @@ export default {
                 result += item.grade ? item.grade :0 ;
             })
             return result;
+        },
+        resultBarWidth(){
+            // 组件的宽度，给脱离文档流的底部标签栏赋值
+            // let width = this.$refs;
+            window.console.log(this.$refs)
+            return '1300px';
         }
     },
     methods:{
@@ -152,11 +159,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$theme:#5670C5;
 
-.el-row{
-    margin: 10px;
-}
 .el-select{
     width: 100%;
 }
@@ -168,6 +173,9 @@ export default {
     text-align: center;
     justify-content: flex-end;
 }
+
+
+
 .tableData__null{
     display: flex;
     height: 40px;
@@ -181,19 +189,36 @@ export default {
   height: 300px;
   width: 400px;
 }
+
 .title--item{
     text-align: left;
     white-space: nowrap;
     color: #909399;
     font-size: 12px;
     font-weight: bold;
-    line-height: 40px;
+    line-height: 30px;
 }
+
 .table-item {
-    transition: all 1s;
+    margin: 10px;
+    transition: all 500ms;
 }
+
 .table-enter, .table-leave-to {
     opacity: 0;
     transform: translateX(-30px);
 }
+
+.result-bar{
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+}
+
+.wrapper{
+    background-color: white;
+    border-radius:8px;
+    padding-bottom: 50px;
+}
+
 </style>

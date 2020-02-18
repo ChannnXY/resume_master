@@ -7,7 +7,7 @@
                 <img src="http://via.placeholder.com/200x60" class="drawer--image"/>
 
                 <el-menu default-active="1" :class="drawerClassName">
-                  <el-submenu index="1">
+                  <el-submenu index="1-1">
                     <template slot="title">
                         <i class="el-icon-user"></i>
                         <span>个人信息</span>
@@ -44,27 +44,39 @@
         <div class="container">
             <el-col class="container--wrapper"
                     :class="containerClassName">
+                <div class="background"></div>
+
                 <el-row class="header">
-                    <el-col :span="9">
+                    <el-col :span="2">
                         <span class="el-icon-s-unfold header--icon" 
                               @click="flags.showDrawerFlag = !flags.showDrawerFlag"></span>
                     </el-col>
-                    <el-col :span="6">
-                        <el-input></el-input>
+                    <el-col :span="6" :offset="12">
+                        <el-input class="header--input" size="small">
+                            <i slot="suffix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
                     </el-col>
-                    <el-col :span="9">
+                    <el-col :span="4" class="header--head">
                         <el-dropdown>
-                            <el-container class="el-dropdown-link">
+                            <div class="el-dropdown-link header--name">
                                 <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
                                 <span>陈同学</span>
                                 <i class="el-icon-arrow-down el-icon--right"></i>
-                            </el-container>
-                            <el-dropdown-menu slot="dropdown">
+                            </div>
+                            <el-dropdown-menu slot="dropdown" @click="logOut()">
                                 <el-dropdown-item>退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </el-col>
                 </el-row>
+
+                <el-row class="tab">
+                    <ul>
+                        <li></li>
+                    </ul>
+                    <thCivilized></thCivilized>
+                </el-row>
+                
             </el-col>
         </div>
         
@@ -72,14 +84,30 @@
 </template>
 
 <script>
+import thCivilized from "./thCivilized";
 export default {
+    
     name:'index',
+    components:{
+        thCivilized
+    },
     data(){
         return {
-            flags:{showDrawerFlag:true}
+            flags:{showDrawerFlag:true},
         }
     },
     methods:{
+        // 退出登录
+        logOut(){
+            window.console.log(11)
+            this.$confirm('您确定要退出登录吗', '页面提示', {
+                confirmButtonText: '确定退出',
+                cancelButtonText: '我点错了',
+                type: 'info'
+            }).then(() => {
+                this.$emit('changeCom','login')
+            }).catch(() => {});
+        }
     },
     computed:{
         containerClassName(){
@@ -98,10 +126,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     $theme:#5670C5;
+    $background:#EAEFF3;
 
-    /deep/ .el-container{
+    .el-container{
         display: flex;
     }
 
@@ -129,28 +158,38 @@ export default {
             height: 80px;
         }
     }
+
+    .background{
+        position: fixed;
+        top: 0%;
+        width: 100vw;
+        height: 30vh;
+        background: $theme;
+    }
     
     .container{
         .container--wrapper{
             position: relative;
             left: 15vw;
-            height: 130vh;
-            background-color: red
+            height: 100vh;
+            background-color: $background
         }
 
         .container--wrapper__full{
+            left: 0;
             width: 100vw;
             transition: all 1s;
         }
 
         .container--wrapper__part{
+            
             width: 85vw;
             transition: all 1s;
         }
     }
 
     .header{
-        height: 64px;
+        height: 8vh;
         display: flex;
         align-items: center;
         .header--icon{
@@ -162,6 +201,49 @@ export default {
                 opacity: 0.8;
             }
         }
-        
+        .header--input{
+            .el-input__inner{
+                padding:0 10px;
+                border: none;
+                margin: 10px 0;
+                border-radius:30px;
+            }
+        }
+        .header--head{
+            padding-right: 30px;
+            display: flex;
+            justify-content: flex-end;
+
+            .header--name{
+                display: flex;
+                color: white;
+                align-items: center;
+            }
+
+            .header--name>span{
+                margin-right: 10px
+            }
+        }
+    }
+
+    .tab{
+        margin:0 2vh 1vh 2vh;
+        .el-tabs__header{
+            margin: 0;
+        }
+        .el-tabs__header{
+            margin: 0px;
+        }
+        .el-tabs__item.is-active{
+            background: white;
+            color: $theme;
+        }
+        .el-tabs__item{
+            color: white;
+        }
+        .el-tabs--card>.el-tabs__header .el-tabs__nav{
+            border-radius: 8px 8px 0 0;
+            border: 2px solid white;
+        }
     }
 </style>
