@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <div class="drawer">
-            <el-col class="drawer--wrapper"
+            <div class="drawer--wrapper"
                     :class="drawerClassName">
 
                 <img src="http://via.placeholder.com/200x60" class="drawer--image"/>
@@ -38,7 +38,7 @@
                     <el-menu-item index="3-4">管理班级成员</el-menu-item>
                 </el-submenu>
                 </el-menu>
-            </el-col>  
+            </div>  
         </div>
         
         <div class="container">
@@ -72,14 +72,16 @@
 
                 <el-row class="tab">
                     <ul>
-                        <li></li>
+                        <li>思想素质</li>
                     </ul>
-                    <thCivilized></thCivilized>
+                </el-row>
+
+                <el-row class="component">
+                  <thCivilized style="height:75vh"></thCivilized>
                 </el-row>
                 
             </el-col>
         </div>
-        
     </el-container>
 </template>
 
@@ -138,6 +140,7 @@ export default {
         .drawer--wrapper{
             height: 100vh;
             width: 15vw;
+            background-color: white;
             position: fixed;
             top:0%;
         }
@@ -171,8 +174,6 @@ export default {
         .container--wrapper{
             position: relative;
             left: 15vw;
-            height: 100vh;
-            background-color: $background
         }
 
         .container--wrapper__full{
@@ -182,7 +183,6 @@ export default {
         }
 
         .container--wrapper__part{
-            
             width: 85vw;
             transition: all 1s;
         }
@@ -245,5 +245,9 @@ export default {
             border-radius: 8px 8px 0 0;
             border: 2px solid white;
         }
+    }
+
+    .component{
+        margin: 2vh;
     }
 </style>
