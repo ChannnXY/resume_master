@@ -25,14 +25,6 @@
                 </el-col>
                 
                 <el-col :span="2">
-                    <!-- <el-upload  action=""
-                                :http-request="uploadFile(userIndex)"
-                                :on-success="(res,file,fileList)=>uploadSuccess(res,file,fileList,userIndex)"
-                                :limit="1"
-                                :show-file-list="false"
-                                v-show="!userItem.imageUrl">
-                        <el-button size="small" round slot="trigger">上传凭证</el-button>
-                    </el-upload> -->
                     <div v-show="!userItem.imageUrl">
                         <input type="file"
                             @change="uploadFile(userIndex)"
@@ -42,7 +34,7 @@
                     </div>
                     <!-- 图片预览按钮 -->
                     <el-popover placement="left"
-                                v-model="visible"
+                                v-model="previewFlags[userIndex]"
                                 title="点击确认删除可以删除本照片"
                                 v-show="userItem.imageUrl">
                         <!-- 预览照片 -->
@@ -50,8 +42,8 @@
                                 fit="cover"
                                 class="preview--image"></el-image>
                         <div style="text-align:right;margin-top:8px;">
-                            <el-button size="mini" type="text" @click="visible = false" style="margin-right:20px">取消</el-button>
-                            <el-button type="danger" size="mini" @click="visible = false;previewDelete(userIndex)">确定删除</el-button>
+                            <el-button size="mini" type="text" @click="previewFlags[userIndex] = false" style="margin-right:20px">取消</el-button>
+                            <el-button type="danger" size="mini" @click="previewFlags[userIndex] = false;previewDelete(userIndex)">确定删除</el-button>
                         </div>
                         <el-button size="small" type="primary" slot="reference" round>预览照片</el-button>
                     </el-popover>
@@ -81,13 +73,14 @@
 
 <script>
 import { store } from "../store/thCililized";
-import { $post,$get } from "../assets/utils/ajax";
+import { $post } from "../assets/utils/ajax";
+import Worker from '../../public/file_md5.worker'
 export default {
     name:'thCivilized',
     store:store,
     data(){
         return{
-            visible:false
+            
         }
     },
     computed:{
@@ -104,6 +97,13 @@ export default {
             })
             return result > 20 ? 20 : result;
         },
+        previewFlags(){
+            let previewFlags = [];
+            this.$store.state.selectOption.forEach(()=>{
+                previewFlags.push(false)
+            })
+            return previewFlags;
+        }
     },
     methods:{
         onSelectChange(itemId,index){
@@ -125,7 +125,7 @@ export default {
             let limitType = ['image/jpeg','image/png','image/gif','video/mp4'];
             let limitSize = 1024*1024*1024; // 最大上传1G
             let sliceSize = 5*1024*1024; // 5MB 以上切片上传
-            let file = this.$refs.inputFile[0].files[0];
+            let file = this.$refs.inputFile[index].files[0];
             // 控制文件格式
             if(!limitType.includes(file.type)){
                 this.$message({
@@ -147,38 +147,53 @@ export default {
                 this.uploadFileDirectly(file,index)
             }
         },
+        // hash加密文件体
+        calculateHash(fileChunkList){
+            return new Promise(resolve =>{
+                const worker = new Worker();
+                worker.postMessage(fileChunkList);
+                worker.onmessage = e =>{
+                    const hash = e.data.hash;
+                    if(hash){resolve(hash)}
+                }
+            })
+        },
         // 切片上传
         async uploadFileSlice(file,index){
             window.console.log('切片上传',file,index)
             let fileChunkList = this.createChunkFile(file,5);
-            
-            fileChunkList = fileChunkList.map( item => {
-                const data = new FormData();
-                data.append('chunk',item.chunk);
-                data.append('filename',item.name);
-                return $post({
-                        url:"http://192.168.137.1:3000/users/postImageChunk",
-                        data:data
-                    }).then( res =>{
-                        window.console.log(res)
-                        if(res.code === 200) {
-                            return Promise.resolve(res)
-                        }else{
-                            return Promise.reject(res)
-                        }
-                    })
+            let fileHash = "" ;
+            this.calculateHash(fileChunkList).then( res=>{
+                fileHash = res;
             });
-            // 合并切片,5个返回的promise对象状态都是resolve的时候
-            await Promise.all(fileChunkList).then(() =>{
-                $get({
-                    url:"http://192.168.137.1:3000/users/merge?filename="+file.name,
-                    headers:{
-                        'content-type':'application/x-www-form-urlencoded'
-                    }
-                }).then( res =>{
-                    window.console.log(res)
-                })
-            })
+            window.console.log(fileHash)
+            // fileChunkList = fileChunkList.map( item => {
+            //     const data = new FormData();
+                
+            //     data.append('chunk',item.chunk);
+            //     data.append('filename',item.name);
+            //     return $post({
+            //             url:"http://192.168.137.1:3000/users/postImageChunk",
+            //             data:data
+            //         }).then( res =>{
+            //             if(res.code === 200) {
+            //                 return Promise.resolve(res)
+            //             }else{
+            //                 return Promise.reject(res)
+            //             }
+            //         })
+            // });
+            // // 合并切片,5个返回的promise对象状态都是resolve的时候
+            // await Promise.all(fileChunkList).then(() =>{
+            //     $get({
+            //         url:"http://192.168.137.1:3000/users/merge?filename="+file.name,
+            //         headers:{
+            //             'content-type':'application/x-www-form-urlencoded'
+            //         }
+            //     }).then( res =>{
+            //         this.uploadSuccess(res,null,null,index)
+            //     })
+            // })
         },
         // 生成文件切片
         createChunkFile(file,chunkNum){
@@ -219,7 +234,7 @@ export default {
             this.$store.commit('addSelectItem')
         },
         removeSelectItem(index){
-            this.visible=false
+            this.previewFlags[index]=false
             this.$store.commit('removeSelectItem',index)
         },
         submitSelectItem(){
