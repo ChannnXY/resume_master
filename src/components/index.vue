@@ -52,7 +52,7 @@
                               @click="flags.showDrawerFlag = !flags.showDrawerFlag"></span>
                     </el-col>
                     <el-col :span="6" :offset="12">
-                        <el-input class="header--input" size="small">
+                        <el-input v-model="searchText" class="header--input" size="small" @input="checkInput()">
                             <i slot="suffix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-col>
@@ -63,7 +63,7 @@
                                 <span>陈同学</span>
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </div>
-                            <el-dropdown-menu slot="dropdown" @click="logOut()">
+                            <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
@@ -87,8 +87,8 @@
 
 <script>
 import thCivilized from "./thCivilized";
+import {debounceSync} from '../assets/utils/debounce'
 export default {
-    
     name:'index',
     components:{
         thCivilized
@@ -96,6 +96,7 @@ export default {
     data(){
         return {
             flags:{showDrawerFlag:true},
+            searchText:''
         }
     },
     methods:{
@@ -109,6 +110,9 @@ export default {
             }).then(() => {
                 this.$emit('changeCom','login')
             }).catch(() => {});
+        },
+        checkInput(){
+            debounceSync(window.console.log(this.searchText),2000);
         }
     },
     computed:{

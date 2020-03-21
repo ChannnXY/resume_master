@@ -1,9 +1,4 @@
-import Vue from  'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
+export default {
     state:{
         selectOption:[
             {itemId:23140,name:'大学一年级被列为入党积极分子',minGrade:0,maxGrade:2,defaultGrade:20},
@@ -11,9 +6,7 @@ export const store = new Vuex.Store({
             {itemId:21245,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:1,defaultGrade:18},
             {itemId:12314,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:1,defaultGrade:15},
             {itemId:12233,name:'大学二年级被列入党员发展计划',minGrade:0,maxGrade:4,defaultGrade:18},],
-        selectItems:[]
-    },
-    getters:{
+        selectItems:[],
     },
     mutations:{
         addSelectItem(state){
@@ -50,5 +43,5 @@ export const store = new Vuex.Store({
             window.console.log(state.selectItems);
             return true;
         }
-    }
-})
+    },
+}

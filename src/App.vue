@@ -1,22 +1,15 @@
 <template>
   <div id="app">
-    <component :is="componentName" @changeCom="changeCom"></component>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import index from './components/index.vue'
-import login from './components/login.vue'
-
 export default {
   name: 'app',
-  components: {
-    index,
-    login
-  },
   data(){
     return{
-      componentName:"index"
+      componentName:"login"
     }
   },
   methods:{

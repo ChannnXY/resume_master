@@ -72,34 +72,29 @@
 </template>
 
 <script>
-import { store } from "../store/thCililized";
-import { $post } from "../assets/utils/ajax";
-import Worker from '../../public/file_md5.worker'
+import { store } from "../store/index";
 export default {
     name:'thCivilized',
-    store:store,
     data(){
-        return{
-            
-        }
+        return{}
     },
     computed:{
         selectOption(){
-            return this.$store.state.selectOption;
+            return store.state.civilized.selectOption;
         },
         selectItems(){
-            return this.$store.state.selectItems;
+            return store.state.civilized.selectItems;
         },
         partGrade(){
             let result = 15;
-            this.$store.state.selectItems.forEach(item=>{
+            store.state.civilized.selectItems.forEach(item=>{
                 result += item.grade ? item.grade : 0 ;
             })
             return result > 20 ? 20 : result;
         },
         previewFlags(){
             let previewFlags = [];
-            this.$store.state.selectOption.forEach(()=>{
+            store.state.civilized.selectOption.forEach(()=>{
                 previewFlags.push(false)
             })
             return previewFlags;
@@ -108,7 +103,7 @@ export default {
     methods:{
         onSelectChange(itemId,index){
             let payload = {index:index,itemId:itemId}
-            this.$store.commit('onSelectChange',payload)
+            store.commit('onSelectChange',payload)
         },
         uploadSuccess(res,file,fileList,index){
             // file.raw 图片文件原始内容
@@ -118,7 +113,7 @@ export default {
                 type:'success'});
             let imageUrl = res.data.src
             let payload = {index:index,imageUrl:imageUrl}
-            this.$store.commit('uploadSuccess',payload)
+            store.commit('uploadSuccess',payload)
         },
         uploadFile(index){
             // 文件上传
@@ -147,53 +142,9 @@ export default {
                 this.uploadFileDirectly(file,index)
             }
         },
-        // hash加密文件体
-        calculateHash(fileChunkList){
-            return new Promise(resolve =>{
-                const worker = new Worker();
-                worker.postMessage(fileChunkList);
-                worker.onmessage = e =>{
-                    const hash = e.data.hash;
-                    if(hash){resolve(hash)}
-                }
-            })
-        },
         // 切片上传
         async uploadFileSlice(file,index){
             window.console.log('切片上传',file,index)
-            let fileChunkList = this.createChunkFile(file,5);
-            let fileHash = "" ;
-            this.calculateHash(fileChunkList).then( res=>{
-                fileHash = res;
-            });
-            window.console.log(fileHash)
-            // fileChunkList = fileChunkList.map( item => {
-            //     const data = new FormData();
-                
-            //     data.append('chunk',item.chunk);
-            //     data.append('filename',item.name);
-            //     return $post({
-            //             url:"http://192.168.137.1:3000/users/postImageChunk",
-            //             data:data
-            //         }).then( res =>{
-            //             if(res.code === 200) {
-            //                 return Promise.resolve(res)
-            //             }else{
-            //                 return Promise.reject(res)
-            //             }
-            //         })
-            // });
-            // // 合并切片,5个返回的promise对象状态都是resolve的时候
-            // await Promise.all(fileChunkList).then(() =>{
-            //     $get({
-            //         url:"http://192.168.137.1:3000/users/merge?filename="+file.name,
-            //         headers:{
-            //             'content-type':'application/x-www-form-urlencoded'
-            //         }
-            //     }).then( res =>{
-            //         this.uploadSuccess(res,null,null,index)
-            //     })
-            // })
         },
         // 生成文件切片
         createChunkFile(file,chunkNum){
@@ -220,28 +171,31 @@ export default {
             let data = new FormData();
             data.append('chunk',file);
             data.append('filename',file.name)
-            $post({
-                url:'http://192.168.137.1:3000/users/postImageDirectory',
-                data:data
-            }).then( res =>{
+            // $post({
+            //     url:'http://192.168.137.1:3000/users/postImageDirectory',
+            //     data:data
+            // }).then( res =>{
+            //     this.uploadSuccess(res,null,null,index)
+            // })
+            this.post("/users/postImageDirectory",data).then(res=>{
                 this.uploadSuccess(res,null,null,index)
             })
         },
         previewDelete(index){
-            this.$store.commit('previewDelete',index)
+            store.commit('previewDelete',index)
         },
         addSelectItem(){
-            this.$store.commit('addSelectItem')
+            store.commit('addSelectItem')
         },
         removeSelectItem(index){
             this.previewFlags[index]=false
-            this.$store.commit('removeSelectItem',index)
+            store.commit('removeSelectItem',index)
         },
         submitSelectItem(){
-            if(this.isEmpty(this.$store.state.selectItems)){
+            if(this.isEmpty(store.state.civilized.selectItems)){
                 this.$message.error('请填写完整');
             }else{
-                this.$store.commit('submitSelectItem',this);
+                store.commit('submitSelectItem',this);
             }
         },
         isEmpty(obj){
@@ -282,8 +236,6 @@ $theme:#5670C5;
     text-align: center;
     justify-content: flex-end;
 }
-
-
 
 .tableData__null{
     display: flex;

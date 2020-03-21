@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import {store} from '../store/index'
 export default {
     name:'login',
     data(){
@@ -34,11 +35,23 @@ export default {
     },
     methods:{
         login(){
-            this.$message({
-                message:'登录成功',
-                type:'success'
+            this.post('/users/login',{
+                username:this.formData.username,
+                password:this.formData.password
+            }).then(res=>{
+                window.console.log(res);
+                const data = res.data;
+                if(data.code===200){
+                    this.$message({
+                        message:`登录成功！${data.data.username}`,
+                        type:'success'
+                    })
+                    store.commit('changeToken',data.data.token)
+                    setTimeout(() => {
+                        this.$router.push('/index')
+                    }, 500);
+                }
             })
-            this.$emit('changeCom','index')
         }
     }
 }
@@ -65,6 +78,10 @@ export default {
             margin-bottom: 20px;
             font-size:36px;
             color: $primary;
+        }
+
+        .login--input{
+            margin: 10px 0;
         }
 
         .login--decoration{
