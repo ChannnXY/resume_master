@@ -3,15 +3,13 @@ import vueRouter from 'vue-router'
 import { store } from "../store/index";
 Vue.use(vueRouter);
 
-import index from '../components/index.vue'
-import login from '../components/login.vue'
-
 const router = new vueRouter({
     mode:'history',
+    base:'/evaluation/',
     routes:[
         {path:'/',redirect:'/index'},
-        {path:'/login',component:login,name:'login'},
-        {path:'/index',component:index,name:'index'},
+        {path:'/login',component:()=>import('../components/login.vue'),name:'login'},
+        {path:'/index',component:()=>import('../components/index.vue'),name:'index'},
     ]
 })
 

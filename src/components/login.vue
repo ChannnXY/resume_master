@@ -39,7 +39,6 @@ export default {
                 username:this.formData.username,
                 password:this.formData.password
             }).then(res=>{
-                window.console.log(res);
                 const data = res.data;
                 if(data.code===200){
                     this.$message({

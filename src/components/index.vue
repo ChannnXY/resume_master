@@ -1,12 +1,12 @@
 <template>
     <el-container>
-        <div class="drawer">
+        <div class="drawer hidden-sm-and-down">
             <div class="drawer--wrapper"
                     :class="drawerClassName">
 
                 <img src="http://via.placeholder.com/200x60" class="drawer--image"/>
 
-                <el-menu default-active="1" :class="drawerClassName">
+                <el-menu :class="drawerClassName">
                   <el-submenu index="1-1">
                     <template slot="title">
                         <i class="el-icon-user"></i>
@@ -27,16 +27,16 @@
                     <el-menu-item index="2-3">其他必填</el-menu-item>
                   </el-submenu>
 
-                <el-submenu index="3">
-                    <template slot="title">
-                        <i class="el-icon-setting"></i>
-                        <span>审核管理</span>
-                    </template>
-                    <el-menu-item index="3-1">审核综测成绩</el-menu-item>
-                    <el-menu-item index="3-2">发布班级通知</el-menu-item>
-                    <el-menu-item index="3-3">修改加分项</el-menu-item>
-                    <el-menu-item index="3-4">管理班级成员</el-menu-item>
-                </el-submenu>
+                    <el-submenu index="3">
+                        <template slot="title">
+                            <i class="el-icon-setting"></i>
+                            <span>审核管理</span>
+                        </template>
+                        <el-menu-item index="3-1">审核综测成绩</el-menu-item>
+                        <el-menu-item index="3-2">发布班级通知</el-menu-item>
+                        <el-menu-item index="3-3">修改加分项</el-menu-item>
+                        <el-menu-item index="3-4">管理班级成员</el-menu-item>
+                    </el-submenu>
                 </el-menu>
             </div>  
         </div>
@@ -47,16 +47,16 @@
                 <div class="background"></div>
 
                 <el-row class="header">
-                    <el-col :span="2">
+                    <el-col :span="2" :sm="6">
                         <span class="el-icon-s-unfold header--icon" 
                               @click="flags.showDrawerFlag = !flags.showDrawerFlag"></span>
                     </el-col>
-                    <el-col :span="6" :offset="12">
+                    <el-col :span="18" :sm="12">
                         <el-input v-model="searchText" class="header--input" size="small" @input="checkInput()">
                             <i slot="suffix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                     </el-col>
-                    <el-col :span="4" class="header--head">
+                    <el-col :span="4" class="header--head" :sm="6">
                         <el-dropdown>
                             <div class="el-dropdown-link header--name">
                                 <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -67,6 +67,11 @@
                                 <el-dropdown-item>退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <!-- <el-dropdown>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>退出登录</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown> -->
                     </el-col>
                 </el-row>
 

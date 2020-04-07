@@ -9,14 +9,9 @@ export default {
   name: 'app',
   data(){
     return{
-      componentName:"login"
     }
   },
   methods:{
-    changeCom(name){
-      this.componentName = name;
-      window.console.log(name)
-    }
   }
 }
 </script>
